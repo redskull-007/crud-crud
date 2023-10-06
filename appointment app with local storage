@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+    <link rel="stylesheet" href="style.css">
+
+  </head>
+  <body>
+    <header>
+      <h1>JS For Beginners</h1>
+    </header>
+
+    <section class="container">
+      <form id="my-form" onsubmit="saveToLocalStorage(event)">
+        <h1>Add User</h1>
+        <div class="msg"></div>
+        <div>
+          <label for="name">Name:</label>
+          <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+          <label for="email">Email:</label>
+          <input type="text" id="email" name="email" required>
+        </div>
+        <div>
+            <label for="phone">Phone No:</label>
+            <input type="text" id="phone" name="phone" required>
+          </div>
+        <input class="btn" type="submit" value="Submit">
+      </form>
+
+      <ul id="listOfUsers"></ul>
+
+      <!-- <ul class="items">
+        <li class="item">Item 1</li>
+        <li class="item">Item 2</li>
+        <li class="item">Item 3</li>
+      </ul> -->
+    </section>
+    
+
+    <script>
+        // storing in local storage
+        // function saveToLocalStorage(event){
+        //     event.preventDefault();
+        //     const name = event.target.name.value;
+        //     const email = event.target.email.value;
+        //     const phone = event.target.phone.value;
+
+        //     localStorage.setItem('name',name);
+        //     localStorage.setItem('email',email);
+        //     localStorage.setItem('phone',phone);
+        // }
+
+        // storing in local storage as an object
+
+        // function saveToLocalStorage(event){
+        //     event.preventDefault();
+        //     const name = event.target.name.value;
+        //     const email = event.target.email.value;
+        //     const phone = event.target.phone.value;
+            
+        //     // creating object
+        //     const obj = {
+        //         name,
+        //         email,
+        //         phone
+        //     }
+        //     localStorage.setItem('userDetails',JSON.stringify(obj));
+
+        // }
+
+        //storing multiple users in local storage
+        function saveToLocalStorage(event){
+            event.preventDefault();
+            const name = event.target.name.value;
+            const email = event.target.email.value;
+            const phone = event.target.phone.value;
+            
+            // creating object
+            const obj = {
+                name,
+                email,
+                phone
+            }
+            localStorage.setItem(obj.email,JSON.stringify(obj));
+            showNewUserOnScreen(obj);
+        }
+
+        function showNewUserOnScreen(user){
+          document.getElementById('email').value=''
+          document.getElementById('name').value=''
+          document.getElementById('phone').value=''
+
+          if(localStorage.getItem(user.email) !== null){
+            removeUserFromScreen(user.email)
+          }
+
+          const parentNode = document.getElementById('listOfUsers');
+          const childHTML = `<li id=${user.email}> ${user.name} - ${user.email}
+                             <button onclick = deleteUser('${user.email}')>Delete User</button>
+                             <button onclick = editUser('${user.email}','${user.name}','${user.phone}')>Edit</button>
+                             </li>`
+
+          parentNode.innerHTML = parentNode.innerHTML + childHTML
+
+        }
+        // delete user 
+        function deleteUser(email){
+          console.log(email)
+          localStorage.removeItem(email);
+          removeUserFromScreen(email);
+
+        }
+        // removing user from screen
+        function removeUserFromScreen(email){
+          const parentNode = document.getElementById('listOfUsers');
+          const childNodeToBeDeleted = document.getElementById(email);
+
+          if(childNodeToBeDeleted){
+            parentNode.removeChild(childNodeToBeDeleted);
+          }
+          
+        }
+
+        // edit user
+        function editUser(email, name, phone){
+          document.getElementById('email').value = email;
+          document.getElementById('name').value = name;
+          document.getElementById('phone').value = phone;
+
+          deleteUser(email)
+        }
+
+    </script>
+  </body>
+</html>
